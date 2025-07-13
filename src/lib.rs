@@ -1,0 +1,10 @@
+pub mod cache;
+pub mod colors;
+pub mod config;
+pub mod display;
+pub mod lyrics;
+pub mod models;
+pub mod player;
+pub mod progress;
+pub mod providers;
+pub mod ui;
