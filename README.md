@@ -56,17 +56,24 @@ cargo build --release
 For richer album metadata and high-quality cover art, you can optionally configure Tidal API credentials:
 
 1. Get Tidal API credentials from <https://developer.tidal.com/dashboard/create>
-2. Create a `.env` file from the example:
+2. Set the credentials using one of these methods:
 
+   **Option A: Environment Variables (Recommended for production)**
+   ```bash
+   export TIDAL_CLIENT_ID=your_client_id
+   export TIDAL_CLIENT_SECRET=your_client_secret
+   trackwatch
+   ```
+
+   Or run directly:
+   ```bash
+   TIDAL_CLIENT_ID=your_client_id TIDAL_CLIENT_SECRET=your_client_secret trackwatch
+   ```
+
+   **Option B: .env File (Convenient for development)**
    ```bash
    cp .env.example .env
-   ```
-
-3. Edit the `.env` file with your credentials:
-
-   ```
-   TIDAL_CLIENT_ID=your_client_id
-   TIDAL_CLIENT_SECRET=your_client_secret
+   # Edit .env with your credentials
    ```
 
 **Note**: Tidal integration is entirely optional. trackwatch works perfectly fine without it, using metadata and album art from your media player (playerctl).

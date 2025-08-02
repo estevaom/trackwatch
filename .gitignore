@@ -57,3 +57,6 @@ lcov.info
 
 # Test scripts (if they contain secrets)
 test_*.sh
+
+# Distribution/release artifacts
+/dist/
