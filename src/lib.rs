@@ -6,5 +6,6 @@ pub mod lyrics;
 pub mod models;
 pub mod player;
 pub mod progress;
+pub mod provider_factory;
 pub mod providers;
 pub mod ui;
