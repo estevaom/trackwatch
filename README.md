@@ -37,7 +37,7 @@
 - Rust 1.70+
 - `playerctl` (for media player detection)
 - Terminal with 256 color support
-- Tidal API credentials (for enhanced metadata)
+- Tidal API credentials (optional, for enhanced metadata)
 
 ## Installation
 
@@ -46,15 +46,30 @@
 git clone https://github.com/estevaom/trackwatch
 cd trackwatch
 
-# Get Tidal API credentials from https://developer.tidal.com/dashboard/create
-# Then set up environment variables
-export TIDAL_CLIENT_ID=your_client_id
-export TIDAL_CLIENT_SECRET=your_client_secret
-
 # Build and run
 cargo build --release
 ./target/release/trackwatch
 ```
+
+### Optional: Enhanced Metadata with Tidal
+
+For richer album metadata and high-quality cover art, you can optionally configure Tidal API credentials:
+
+1. Get Tidal API credentials from <https://developer.tidal.com/dashboard/create>
+2. Create a `.env` file from the example:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+3. Edit the `.env` file with your credentials:
+
+   ```
+   TIDAL_CLIENT_ID=your_client_id
+   TIDAL_CLIENT_SECRET=your_client_secret
+   ```
+
+**Note**: Tidal integration is entirely optional. trackwatch works perfectly fine without it, using metadata and album art from your media player (playerctl).
 
 ### Controls
 
@@ -63,7 +78,7 @@ cargo build --release
 ## How It Works
 
 1. **Player Detection**: Uses `playerctl` to monitor any MPRIS2-compatible media player
-2. **Metadata Enrichment**: Fetches additional data from Tidal API when available
+2. **Metadata Enrichment**: Fetches additional data from Tidal API when configured (optional)
 3. **Album Art Processing**: Downloads and converts images to 30x30 pixelated format
 4. **Color Extraction**: Uses k-means clustering in LAB color space for palette generation
 5. **Lyrics Fetching**: Downloads from LRCLIB API with intelligent caching
@@ -97,6 +112,7 @@ cargo doc --open
 This project uses GitHub Actions for continuous integration and deployment:
 
 ### Automated Checks
+
 - **Code Formatting**: Enforces consistent style with `cargo fmt`
 - **Linting**: Catches common mistakes with `cargo clippy`
 - **Testing**: Runs the full test suite (65+ tests)
@@ -104,13 +120,16 @@ This project uses GitHub Actions for continuous integration and deployment:
 - **Cross-platform Builds**: Builds for x86_64 and aarch64 Linux
 
 ### Release Process
+
 The CI pipeline automatically:
+
 1. Runs all quality checks on every push/PR
 2. Generates code coverage reports
 3. Creates release artifacts for multiple architectures
 4. Caches dependencies for faster builds
 
 ### Running CI Locally
+
 You can run the same checks locally before pushing:
 
 ```bash
@@ -128,19 +147,6 @@ cargo tarpaulin --out Xml
 cargo build --release
 ```
 
-## Configuration
-
-The application uses environment variables:
-
-```bash
-# Required for Tidal metadata enrichment
-TIDAL_CLIENT_ID=your_client_id
-TIDAL_CLIENT_SECRET=your_client_secret
-
-# Optional
-RUST_LOG=debug  # Enable debug logging
-```
-
 ## Cache Location
 
 - Images: `~/.cache/trackwatch/`
@@ -156,7 +162,6 @@ MIT
 - The Tidal API for media metadata
 - The ratatui community for excellent TUI examples
 - playerctl for universal media player support
-
 
 <br>
 

@@ -29,14 +29,7 @@ fn main() -> Result<()> {
     }
 
     // Load configuration
-    let config = match Config::from_env() {
-        Ok(cfg) => cfg,
-        Err(e) => {
-            eprintln!("Configuration error: {e}");
-            eprintln!("Please set TIDAL_CLIENT_ID and TIDAL_CLIENT_SECRET environment variables");
-            return Err(e);
-        }
-    };
+    let config = Config::from_env();
 
     // Setup terminal
     let mut terminal = ui::setup_terminal()?;
@@ -47,7 +40,14 @@ fn main() -> Result<()> {
 
     // Spawn background thread for fetching player data
     thread::spawn(move || {
-        let mut provider = TidalProvider::new(config.tidal_client_id, config.tidal_client_secret);
+        let mut provider = if config.has_tidal_credentials() {
+            Some(TidalProvider::new(
+                config.tidal_client_id.clone().unwrap(),
+                config.tidal_client_secret.clone().unwrap(),
+            ))
+        } else {
+            None
+        };
         let formatter = DisplayFormatter::new(IMAGE_SIZE);
 
         // Initialize lyrics components
@@ -77,8 +77,9 @@ fn main() -> Result<()> {
                     };
 
                     if track_changed {
-                        // Try to get album metadata from Tidal
-                        cached_album_metadata = if let Some(ref album) = player_metadata.album {
+                        // Try to get album metadata from Tidal if available
+                        cached_album_metadata = if let (Some(album), Some(ref mut provider)) = 
+                            (player_metadata.album.as_ref(), provider.as_mut()) {
                             match provider.get_album_metadata(&player_metadata.artist, album) {
                                 Ok(metadata) => {
                                     // Also fetch album art

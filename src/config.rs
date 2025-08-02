@@ -1,22 +1,21 @@
-use anyhow::{anyhow, Result};
-
 #[derive(Debug, Clone)]
 pub struct Config {
-    pub tidal_client_id: String,
-    pub tidal_client_secret: String,
+    pub tidal_client_id: Option<String>,
+    pub tidal_client_secret: Option<String>,
 }
 
 impl Config {
-    pub fn from_env() -> Result<Self> {
-        let tidal_client_id = std::env::var("TIDAL_CLIENT_ID")
-            .map_err(|_| anyhow!("TIDAL_CLIENT_ID environment variable not set"))?;
+    pub fn from_env() -> Self {
+        let tidal_client_id = std::env::var("TIDAL_CLIENT_ID").ok();
+        let tidal_client_secret = std::env::var("TIDAL_CLIENT_SECRET").ok();
 
-        let tidal_client_secret = std::env::var("TIDAL_CLIENT_SECRET")
-            .map_err(|_| anyhow!("TIDAL_CLIENT_SECRET environment variable not set"))?;
-
-        Ok(Self {
+        Self {
             tidal_client_id,
             tidal_client_secret,
-        })
+        }
+    }
+
+    pub fn has_tidal_credentials(&self) -> bool {
+        self.tidal_client_id.is_some() && self.tidal_client_secret.is_some()
     }
 }
