@@ -123,7 +123,7 @@ jobs:
         tar -czf trackwatch-${{ matrix.target }}.tar.gz *
 
     - name: Upload artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: trackwatch-${{ matrix.target }}
         path: dist/trackwatch-${{ matrix.target }}.tar.gz
